@@ -1088,15 +1088,19 @@
       const container = document.getElementById('ranger-news-feed');
       let items = [];
 
-      // Fetch news articles and YouTube in parallel
-      const [newsRes, ytRes] = await Promise.allSettled([
-        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://news.google.com/rss/search?q=%22ford+ranger+super+duty%22+OR+%22ranger+super+duty%22+australia&hl=en-AU&gl=AU&ceid=AU:en')}`).then(r => r.json()),
-        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://www.youtube.com/feeds/videos.xml?search_query=ford+ranger+super+duty+australia')}`).then(r => r.json())
+      // Fetch from multiple sources in parallel for better coverage
+      const [superDutyRes, rangerRes, rangerReviewRes, ytSuperDutyRes, ytRangerRes] = await Promise.allSettled([
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://news.google.com/rss/search?q=%22ranger+super+duty%22+australia&hl=en-AU&gl=AU&ceid=AU:en')}`).then(r => r.json()),
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://news.google.com/rss/search?q=ford+ranger+australia+2025+OR+2026&hl=en-AU&gl=AU&ceid=AU:en')}`).then(r => r.json()),
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://news.google.com/rss/search?q=ford+ranger+review+OR+test+OR+price+australia&hl=en-AU&gl=AU&ceid=AU:en')}`).then(r => r.json()),
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://www.youtube.com/feeds/videos.xml?search_query=ford+ranger+super+duty+australia')}`).then(r => r.json()),
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://www.youtube.com/feeds/videos.xml?search_query=ford+ranger+2025+2026+australia+review')}`).then(r => r.json())
       ]);
 
-      // Process news articles
-      if (newsRes.status === 'fulfilled' && newsRes.value.status === 'ok') {
-        newsRes.value.items.forEach(item => {
+      // Process all news feeds
+      function processNewsFeed(res) {
+        if (res.status !== 'fulfilled' || res.value.status !== 'ok') return;
+        res.value.items.forEach(item => {
           const date = new Date(item.pubDate);
           if (now - date.getTime() > THIRTY_DAYS) return;
           items.push({
@@ -1108,10 +1112,14 @@
           });
         });
       }
+      processNewsFeed(superDutyRes);
+      processNewsFeed(rangerRes);
+      processNewsFeed(rangerReviewRes);
 
-      // Process YouTube videos
-      if (ytRes.status === 'fulfilled' && ytRes.value.status === 'ok' && ytRes.value.items) {
-        ytRes.value.items.forEach(item => {
+      // Process all YouTube feeds
+      function processYTFeed(res) {
+        if (res.status !== 'fulfilled' || res.value.status !== 'ok' || !res.value.items) return;
+        res.value.items.forEach(item => {
           const date = new Date(item.pubDate);
           if (now - date.getTime() > THIRTY_DAYS) return;
           const videoId = item.link ? item.link.match(/[?&]v=([^&]+)/) : null;
@@ -1125,6 +1133,17 @@
           });
         });
       }
+      processYTFeed(ytSuperDutyRes);
+      processYTFeed(ytRangerRes);
+
+      // Deduplicate by title similarity
+      const seen = new Set();
+      items = items.filter(item => {
+        const key = item.title.substring(0, 50).toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
 
       // Sort newest first
       items.sort((a, b) => b.date - a.date);
