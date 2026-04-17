@@ -737,33 +737,6 @@
     .research-section-title { grid-column: span 1; }
   }
 
-  /* Aftermarket sub-tabs */
-  .am-tabs {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-  }
-  .am-tab {
-    padding: 6px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-muted);
-    background: rgba(255,255,255,0.05);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: color 0.2s, background 0.2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .am-tab:hover { color: var(--text); background: rgba(255,255,255,0.08); }
-  .am-tab.active {
-    color: var(--accent);
-    background: rgba(56,189,248,0.15);
-  }
-  .am-panel { display: none; }
-  .am-panel.active { display: block; }
 </style>
 </head>
 <body>
@@ -867,7 +840,16 @@
 
     <div class="ranger-tabs">
       <button class="ranger-tab active" onclick="switchRangerTab('news', this)">Latest News</button>
-      <button class="ranger-tab" onclick="switchRangerTab('aftermarket', this)">Aftermarket</button>
+      <button class="ranger-tab" onclick="switchRangerTab('bullbars', this)">Bull Bars</button>
+      <button class="ranger-tab" onclick="switchRangerTab('suspension', this)">Suspension</button>
+      <button class="ranger-tab" onclick="switchRangerTab('tanks', this)">Long Range Tanks</button>
+      <button class="ranger-tab" onclick="switchRangerTab('canopies', this)">Canopies &amp; Trays</button>
+      <button class="ranger-tab" onclick="switchRangerTab('performance', this)">Performance</button>
+      <button class="ranger-tab" onclick="switchRangerTab('electrical', this)">Electrical</button>
+      <button class="ranger-tab" onclick="switchRangerTab('campers', this)">Campers</button>
+      <button class="ranger-tab" onclick="switchRangerTab('fridges', this)">Fridges</button>
+      <button class="ranger-tab" onclick="switchRangerTab('water', this)">Water Tanks</button>
+      <button class="ranger-tab" onclick="switchRangerTab('touring', this)">Touring</button>
     </div>
 
     <!-- Tab: Latest News (articles + YouTube, last 2 weeks only) -->
@@ -875,22 +857,7 @@
       <div class="ranger-feed" id="ranger-news-feed"><div class="loading">Loading latest news</div></div>
     </div>
 
-    <!-- Tab: Aftermarket -->
-    <div class="ranger-panel" id="ranger-aftermarket">
-      <div class="am-tabs">
-        <button class="am-tab active" onclick="switchAmTab('bullbars', this)">Bull Bars</button>
-        <button class="am-tab" onclick="switchAmTab('suspension', this)">Suspension</button>
-        <button class="am-tab" onclick="switchAmTab('tanks', this)">Long Range Tanks</button>
-        <button class="am-tab" onclick="switchAmTab('canopies', this)">Canopies &amp; Trays</button>
-        <button class="am-tab" onclick="switchAmTab('performance', this)">Performance</button>
-        <button class="am-tab" onclick="switchAmTab('electrical', this)">Electrical</button>
-        <button class="am-tab" onclick="switchAmTab('campers', this)">Campers</button>
-        <button class="am-tab" onclick="switchAmTab('fridges', this)">Fridges</button>
-        <button class="am-tab" onclick="switchAmTab('water', this)">Water Tanks</button>
-        <button class="am-tab" onclick="switchAmTab('touring', this)">Touring</button>
-      </div>
-
-      <div class="am-panel active" id="am-bullbars">
+    <div class="ranger-panel" id="ranger-bullbars">
         <div class="research-grid">
           <a class="research-link" href="https://www.arb.com.au/ford-ranger/" target="_blank">
             <span class="r-icon">&#128296;</span> ARB &ndash; Bull Bars, Canopies, Drawers <span class="r-arrow">&rsaquo;</span>
@@ -907,7 +874,7 @@
         </div>
       </div>
 
-      <div class="am-panel" id="am-suspension">
+      <div class="ranger-panel" id="ranger-suspension">
         <div class="research-grid">
           <a class="research-link" href="https://www.ironman4x4.com.au/ford-ranger" target="_blank">
             <span class="r-icon">&#128170;</span> Ironman 4x4 &ndash; Suspension, Lift Kits <span class="r-arrow">&rsaquo;</span>
@@ -921,7 +888,7 @@
         </div>
       </div>
 
-      <div class="am-panel" id="am-tanks">
+      <div class="ranger-panel" id="ranger-tanks">
         <div class="research-grid">
           <a class="research-link" href="https://www.browndavis.com.au/long-range-fuel-tanks/ford/ranger" target="_blank">
             <span class="r-icon">&#9981;</span> Brown Davis &ndash; Long Range Tanks <span class="r-arrow">&rsaquo;</span>
@@ -932,7 +899,7 @@
         </div>
       </div>
 
-      <div class="am-panel" id="am-canopies">
+      <div class="ranger-panel" id="ranger-canopies">
         <div class="research-grid">
           <a class="research-link" href="https://www.arb.com.au/accessories/canopies/" target="_blank">
             <span class="r-icon">&#127968;</span> ARB &ndash; Ascent Canopies <span class="r-arrow">&rsaquo;</span>
@@ -949,7 +916,7 @@
         </div>
       </div>
 
-      <div class="am-panel" id="am-performance">
+      <div class="ranger-panel" id="ranger-performance">
         <div class="research-grid">
           <a class="research-link" href="https://www.efi-parts.com.au/collections/ford-ranger" target="_blank">
             <span class="r-icon">&#9889;</span> EFI Parts &ndash; Performance Parts <span class="r-arrow">&rsaquo;</span>
@@ -960,7 +927,7 @@
         </div>
       </div>
 
-      <div class="am-panel" id="am-electrical">
+      <div class="ranger-panel" id="ranger-electrical">
         <div class="research-grid">
           <a class="research-link" href="https://www.stedilight.com/vehicles/ford-ranger" target="_blank">
             <span class="r-icon">&#128161;</span> STEDI &ndash; LED Light Bars, Spotlights <span class="r-arrow">&rsaquo;</span>
@@ -971,7 +938,7 @@
         </div>
       </div>
 
-      <div class="am-panel" id="am-campers">
+      <div class="ranger-panel" id="ranger-campers">
         <div class="research-grid">
           <a class="research-link" href="https://www.jacksoncarryme.com.au/" target="_blank">
             <span class="r-icon">&#9978;</span> Jackson Carry Me &ndash; Slide-On Campers <span class="r-arrow">&rsaquo;</span>
@@ -985,7 +952,7 @@
         </div>
       </div>
 
-      <div class="am-panel" id="am-fridges">
+      <div class="ranger-panel" id="ranger-fridges">
         <div class="research-grid">
           <a class="research-link" href="https://www.dometic.com/en-au/outdoor/portable-fridges-and-coolers/" target="_blank">
             <span class="r-icon">&#10052;</span> Dometic &ndash; Portable Fridges <span class="r-arrow">&rsaquo;</span>
@@ -1002,7 +969,7 @@
         </div>
       </div>
 
-      <div class="am-panel" id="am-water">
+      <div class="ranger-panel" id="ranger-water">
         <div class="research-grid">
           <a class="research-link" href="https://www.bushmans.com.au/underbody-water-tanks" target="_blank">
             <span class="r-icon">&#128167;</span> Bushmans &ndash; Underbody Water Tanks <span class="r-arrow">&rsaquo;</span>
@@ -1016,7 +983,7 @@
         </div>
       </div>
 
-      <div class="am-panel" id="am-touring">
+      <div class="ranger-panel" id="ranger-touring">
         <div class="research-grid">
           <a class="research-link" href="https://www.msa4x4.com.au/ford-ranger" target="_blank">
             <span class="r-icon">&#128188;</span> MSA 4x4 &ndash; Drawers, Fridge Slides <span class="r-arrow">&rsaquo;</span>
@@ -1026,7 +993,6 @@
           </a>
         </div>
       </div>
-    </div>
   </div>
 
   <!-- Travel Deals -->
@@ -1213,13 +1179,6 @@
     document.querySelectorAll('.ranger-panel').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('ranger-' + tabId).classList.add('active');
-  }
-
-  function switchAmTab(tabId, btn) {
-    document.querySelectorAll('.am-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.am-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('am-' + tabId).classList.add('active');
   }
 
   function escapeHtml(str) {
