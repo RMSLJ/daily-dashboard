@@ -1080,7 +1080,7 @@
   }
 
   // 14 days in ms
-  const TWO_WEEKS = 14 * 24 * 60 * 60 * 1000;
+  const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
 
   async function loadRangerNews() {
     try {
@@ -1098,7 +1098,7 @@
       if (newsRes.status === 'fulfilled' && newsRes.value.status === 'ok') {
         newsRes.value.items.forEach(item => {
           const date = new Date(item.pubDate);
-          if (now - date.getTime() > TWO_WEEKS) return;
+          if (now - date.getTime() > THIRTY_DAYS) return;
           items.push({
             type: 'article',
             title: item.title.replace(/\s*-\s*[^-]+$/, ''),
@@ -1113,7 +1113,7 @@
       if (ytRes.status === 'fulfilled' && ytRes.value.status === 'ok' && ytRes.value.items) {
         ytRes.value.items.forEach(item => {
           const date = new Date(item.pubDate);
-          if (now - date.getTime() > TWO_WEEKS) return;
+          if (now - date.getTime() > THIRTY_DAYS) return;
           const videoId = item.link ? item.link.match(/[?&]v=([^&]+)/) : null;
           items.push({
             type: 'video',
@@ -1130,7 +1130,7 @@
       items.sort((a, b) => b.date - a.date);
 
       if (items.length === 0) {
-        container.innerHTML = '<div class="loading" style="animation:none;">No news from the last 2 weeks &mdash; check back soon</div>';
+        container.innerHTML = '<div class="loading" style="animation:none;">No news from the last 30 days &mdash; check back soon</div>';
         return;
       }
 
