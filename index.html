@@ -621,29 +621,10 @@
     font-weight: 700;
     color: var(--text);
   }
-  .fx-trip {
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .fx-trip .trip-icon { font-size: 20px; }
-  .fx-trip .trip-info { flex: 1; }
-  .fx-trip .trip-label {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-  .fx-trip .trip-days {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--accent);
-  }
-  .fx-history {
+  .fx-chart-container {
     margin-top: 14px;
   }
-  .fx-history-title {
+  .fx-chart-title {
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -651,34 +632,10 @@
     color: var(--text-muted);
     margin-bottom: 8px;
   }
-  .fx-bar-chart {
-    display: flex;
-    align-items: flex-end;
-    gap: 3px;
-    height: 60px;
-  }
-  .fx-bar {
-    flex: 1;
-    background: var(--accent);
-    border-radius: 3px 3px 0 0;
-    min-height: 4px;
-    opacity: 0.6;
-    position: relative;
-  }
-  .fx-bar.today { opacity: 1; background: var(--green); }
-  .fx-bar:hover::after {
-    content: attr(data-label);
-    position: absolute;
-    bottom: 105%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--card);
-    color: var(--text);
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    white-space: nowrap;
-    border: 1px solid rgba(255,255,255,0.1);
+  .fx-chart-svg {
+    width: 100%;
+    height: 120px;
+    display: block;
   }
 
   /* Travel deal items */
@@ -1497,8 +1454,6 @@
 
   // ── AUD/VND Currency ──
   const FX_STORAGE_KEY = 'audvnd_history';
-  const TRIP_MAY = new Date(2026, 4, 1);   // 1 May 2026
-  const TRIP_AUG = new Date(2026, 7, 1);   // 1 Aug 2026
 
   function getFxHistory() {
     try { return JSON.parse(localStorage.getItem(FX_STORAGE_KEY)) || []; }
@@ -1517,13 +1472,6 @@
     // Keep last 90 days
     while (history.length > 90) history.shift();
     localStorage.setItem(FX_STORAGE_KEY, JSON.stringify(history));
-  }
-
-  function daysUntil(target) {
-    const now = new Date();
-    now.setHours(0,0,0,0);
-    const diff = target - now;
-    return Math.max(0, Math.ceil(diff / 86400000));
   }
 
   function formatVND(num) {
@@ -1567,30 +1515,68 @@
         signalText = 'Rate is around average — reasonable time to exchange';
       }
 
-      // Trip countdowns
-      const daysMay = daysUntil(TRIP_MAY);
-      const daysAug = daysUntil(TRIP_AUG);
-
-      // Build mini bar chart from history (last 30 entries)
+      // Build SVG line chart from history
       let chartHTML = '';
       if (recent.length > 1) {
-        const chartMin = Math.min(...rates) * 0.999;
-        const chartMax = Math.max(...rates) * 1.001;
+        const chartMin = Math.min(...rates) * 0.9995;
+        const chartMax = Math.max(...rates) * 1.0005;
         const range = chartMax - chartMin || 1;
+        const w = 400, h = 120, pad = 30, padR = 10, padB = 18, padT = 8;
+        const plotW = w - pad - padR;
+        const plotH = h - padT - padB;
+        const step = plotW / Math.max(recent.length - 1, 1);
+
+        // Build line points
+        const points = recent.map((r, i) => {
+          const x = pad + i * step;
+          const y = padT + plotH - ((r.rate - chartMin) / range) * plotH;
+          return { x, y, rate: r.rate, date: r.date };
+        });
+        const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+        const areaPath = linePath + ` L${points[points.length-1].x.toFixed(1)},${padT + plotH} L${points[0].x.toFixed(1)},${padT + plotH} Z`;
+
+        // Y-axis labels (3 ticks)
+        const yMid = (chartMin + chartMax) / 2;
+        const yLabels = [
+          { val: chartMax, y: padT },
+          { val: yMid, y: padT + plotH / 2 },
+          { val: chartMin, y: padT + plotH }
+        ];
+
+        // X-axis labels (first, mid, last)
+        const xLabels = [
+          { label: recent[0].date.slice(5), x: points[0].x },
+          { label: recent[Math.floor(recent.length/2)].date.slice(5), x: points[Math.floor(recent.length/2)].x },
+          { label: recent[recent.length-1].date.slice(5), x: points[recent.length-1].x }
+        ];
+
+        const lastPt = points[points.length - 1];
+
         chartHTML = `
-          <div class="fx-history">
-            <div class="fx-history-title">Last ${recent.length} days rate history</div>
-            <div class="fx-bar-chart">
-              ${recent.map((r, i) => {
-                const pct = ((r.rate - chartMin) / range) * 100;
-                const isToday = i === recent.length - 1;
-                return `<div class="fx-bar${isToday ? ' today' : ''}" style="height:${Math.max(8, pct)}%;" data-label="${r.date}: ${formatVND(r.rate)}"></div>`;
-              }).join('')}
-            </div>
+          <div class="fx-chart-container">
+            <div class="fx-chart-title">Rate history (${recent.length} days)</div>
+            <svg class="fx-chart-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="fxGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              ${yLabels.map(yl => `
+                <line x1="${pad}" y1="${yl.y}" x2="${w - padR}" y2="${yl.y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                <text x="${pad - 4}" y="${yl.y + 3}" text-anchor="end" fill="#64748b" font-size="9" font-family="sans-serif">${formatVND(yl.val)}</text>
+              `).join('')}
+              ${xLabels.map(xl => `
+                <text x="${xl.x}" y="${h - 2}" text-anchor="middle" fill="#64748b" font-size="9" font-family="sans-serif">${xl.label}</text>
+              `).join('')}
+              <path d="${areaPath}" fill="url(#fxGrad)"/>
+              <path d="${linePath}" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="${lastPt.x.toFixed(1)}" cy="${lastPt.y.toFixed(1)}" r="4" fill="#34d399" stroke="#0f172a" stroke-width="2"/>
+            </svg>
           </div>
         `;
       } else {
-        chartHTML = `<div class="fx-history"><div class="fx-history-title">Rate history builds as you use the dashboard each day</div></div>`;
+        chartHTML = `<div class="fx-chart-container"><div class="fx-chart-title">Chart builds as you use the dashboard each day</div></div>`;
       }
 
       function changeHTML(val) {
@@ -1631,21 +1617,6 @@
           </div>
 
           <div class="fx-side">
-            <div class="fx-trip">
-              <span class="trip-icon">&#127995;</span>
-              <div class="trip-info">
-                <div class="trip-label">May trip</div>
-                <div class="trip-days">${daysMay > 0 ? daysMay + ' days to go' : 'Now!'}</div>
-              </div>
-            </div>
-            <div class="fx-trip">
-              <span class="trip-icon">&#127995;</span>
-              <div class="trip-info">
-                <div class="trip-label">August trip</div>
-                <div class="trip-days">${daysAug > 0 ? daysAug + ' days to go' : 'Now!'}</div>
-              </div>
-            </div>
-
             <div class="fx-converter">
               <label>Quick Convert</label>
               <input type="number" id="fx-input" placeholder="Enter AUD" oninput="convertAUD(${rate})">
