@@ -64,6 +64,29 @@
     font-weight: 500;
   }
 
+  /* Close button */
+  .close-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    color: var(--text-muted);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+  .close-btn:hover, .close-btn:active {
+    background: rgba(248,113,113,0.2);
+    color: var(--red);
+    border-color: var(--red);
+  }
+
   /* Grid */
   .grid {
     display: grid;
@@ -764,9 +787,12 @@
     <div class="date" id="date-display"></div>
     <div id="quote-content" style="margin-top:8px;font-size:13px;font-style:italic;color:#94a3b8;max-width:500px;line-height:1.5;"></div>
   </div>
-  <div class="header-right">
-    <div class="time" id="time-display"></div>
-    <div class="greeting" id="greeting-label"></div>
+  <div class="header-right" style="display:flex;align-items:flex-start;gap:16px;">
+    <div>
+      <div class="time" id="time-display"></div>
+      <div class="greeting" id="greeting-label"></div>
+    </div>
+    <button class="close-btn" onclick="closeDashboard()" aria-label="Close">&#10005;</button>
   </div>
 </div>
 
@@ -993,6 +1019,20 @@
 
 <script>
   // ── Clock & Date ──
+  // ── Close App ──
+  function closeDashboard() {
+    if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+      // Home screen web app — replace with blank then close
+      document.body.innerHTML = '';
+      document.body.style.background = '#000';
+      setTimeout(() => window.close(), 100);
+    } else {
+      window.close();
+      // Fallback if window.close() is blocked by browser
+      setTimeout(() => { window.location.href = 'about:blank'; }, 200);
+    }
+  }
+
   function updateClock() {
     const now = new Date();
     const h = now.getHours();
