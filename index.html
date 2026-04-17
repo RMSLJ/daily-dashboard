@@ -753,6 +753,99 @@
     <div class="news-feed" id="news-feed"><div class="loading">Loading news</div></div>
   </div>
 
+  <!-- Ford Ranger Super Duty -->
+  <div class="card span-3">
+    <div class="card-header"><span class="icon">&#128663;</span> Ford Ranger Super Duty</div>
+
+    <div class="ranger-tabs">
+      <button class="ranger-tab active" onclick="switchRangerTab('news', this)">Latest News</button>
+      <button class="ranger-tab" onclick="switchRangerTab('bullbars', this)">Bull Bars</button>
+      <button class="ranger-tab" onclick="switchRangerTab('suspension', this)">Suspension</button>
+      <button class="ranger-tab" onclick="switchRangerTab('tanks', this)">Long Range Tanks</button>
+      <button class="ranger-tab" onclick="switchRangerTab('canopies', this)">Canopies &amp; Trays</button>
+      <button class="ranger-tab" onclick="switchRangerTab('performance', this)">Performance</button>
+      <button class="ranger-tab" onclick="switchRangerTab('electrical', this)">Electrical</button>
+      <button class="ranger-tab" onclick="switchRangerTab('campers', this)">Campers</button>
+      <button class="ranger-tab" onclick="switchRangerTab('fridges', this)">Fridges</button>
+      <button class="ranger-tab" onclick="switchRangerTab('water', this)">Water Tanks</button>
+      <button class="ranger-tab" onclick="switchRangerTab('touring', this)">Touring</button>
+    </div>
+
+    <div class="ranger-panel active" id="ranger-news">
+      <div class="ranger-feed" id="ranger-news-feed"><div class="loading">Loading latest news</div></div>
+    </div>
+
+    <div class="ranger-panel" id="ranger-bullbars">
+      <div class="research-grid">
+        <a class="research-link" href="https://www.arb.com.au/ford-ranger/" target="_blank"><span class="r-icon">&#128296;</span> ARB &ndash; Bull Bars, Canopies, Drawers <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.tjm.com.au/vehicles/ford-ranger" target="_blank"><span class="r-icon">&#128736;</span> TJM &ndash; Bull Bars, Side Steps, Snorkels <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.opposite-lock.com.au/vehicles/ford-ranger" target="_blank"><span class="r-icon">&#128274;</span> Opposite Lock &ndash; Bars, Rails, Recovery <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.mcc4x4.com.au/vehicles/ford-ranger" target="_blank"><span class="r-icon">&#128737;</span> MCC 4x4 &ndash; Bars, Racks, Steps <span class="r-arrow">&rsaquo;</span></a>
+      </div>
+    </div>
+    <div class="ranger-panel" id="ranger-suspension">
+      <div class="research-grid">
+        <a class="research-link" href="https://www.ironman4x4.com.au/ford-ranger" target="_blank"><span class="r-icon">&#128170;</span> Ironman 4x4 &ndash; Suspension, Lift Kits <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.tough-dog.com/vehicle/ford-ranger" target="_blank"><span class="r-icon">&#128054;</span> Tough Dog &ndash; Suspension Systems <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.oldmanemu.com.au/vehicles/ford" target="_blank"><span class="r-icon">&#9881;</span> Old Man Emu &ndash; Suspension <span class="r-arrow">&rsaquo;</span></a>
+      </div>
+    </div>
+    <div class="ranger-panel" id="ranger-tanks">
+      <div class="research-grid">
+        <a class="research-link" href="https://www.browndavis.com.au/long-range-fuel-tanks/ford/ranger" target="_blank"><span class="r-icon">&#9981;</span> Brown Davis &ndash; Long Range Tanks <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.longrangeautomotive.com/ford-ranger" target="_blank"><span class="r-icon">&#128663;</span> Long Range Automotive &ndash; Fuel Tanks <span class="r-arrow">&rsaquo;</span></a>
+      </div>
+    </div>
+    <div class="ranger-panel" id="ranger-canopies">
+      <div class="research-grid">
+        <a class="research-link" href="https://www.arb.com.au/accessories/canopies/" target="_blank"><span class="r-icon">&#127968;</span> ARB &ndash; Ascent Canopies <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.flexiglass.com.au/ford-ranger" target="_blank"><span class="r-icon">&#128230;</span> FlexiGlass &ndash; Canopies, Lids <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.norweld.com.au/ford-ranger-aluminium-trays/" target="_blank"><span class="r-icon">&#128296;</span> Norweld &ndash; Aluminium Trays <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.jacksmetalwork.com.au/" target="_blank"><span class="r-icon">&#128736;</span> Jacks Metal Work &ndash; Custom Trays <span class="r-arrow">&rsaquo;</span></a>
+      </div>
+    </div>
+    <div class="ranger-panel" id="ranger-performance">
+      <div class="research-grid">
+        <a class="research-link" href="https://www.efi-parts.com.au/collections/ford-ranger" target="_blank"><span class="r-icon">&#9889;</span> EFI Parts &ndash; Performance Parts <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.unichip.com.au/vehicles/ford-ranger" target="_blank"><span class="r-icon">&#128200;</span> Unichip &ndash; ECU Tuning <span class="r-arrow">&rsaquo;</span></a>
+      </div>
+    </div>
+    <div class="ranger-panel" id="ranger-electrical">
+      <div class="research-grid">
+        <a class="research-link" href="https://www.stedilight.com/vehicles/ford-ranger" target="_blank"><span class="r-icon">&#128161;</span> STEDI &ndash; LED Light Bars, Spotlights <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.redarc.com.au/ford-ranger" target="_blank"><span class="r-icon">&#128267;</span> REDARC &ndash; Dual Battery, Solar, DCDC <span class="r-arrow">&rsaquo;</span></a>
+      </div>
+    </div>
+    <div class="ranger-panel" id="ranger-campers">
+      <div class="research-grid">
+        <a class="research-link" href="https://www.jacksoncarryme.com.au/" target="_blank"><span class="r-icon">&#9978;</span> Jackson Carry Me &ndash; Slide-On Campers <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.tommycampers.com.au/sdx" target="_blank"><span class="r-icon">&#127957;</span> Tommy Campers &ndash; SDX Slide-On <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.duvalay.com.au/" target="_blank"><span class="r-icon">&#128716;</span> Duvalay &ndash; Camper Mattresses <span class="r-arrow">&rsaquo;</span></a>
+      </div>
+    </div>
+    <div class="ranger-panel" id="ranger-fridges">
+      <div class="research-grid">
+        <a class="research-link" href="https://www.dometic.com/en-au/outdoor/portable-fridges-and-coolers/" target="_blank"><span class="r-icon">&#10052;</span> Dometic &ndash; Portable Fridges <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.engelaustralia.com.au/fridge-freezers" target="_blank"><span class="r-icon">&#10052;</span> Engel &ndash; Fridge Freezers <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.evachill.com.au/" target="_blank"><span class="r-icon">&#10052;</span> EvaKool &ndash; Fridges &amp; Freezers <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.bushmanfridges.com.au/" target="_blank"><span class="r-icon">&#10052;</span> Bushman &ndash; 12V Fridges <span class="r-arrow">&rsaquo;</span></a>
+      </div>
+    </div>
+    <div class="ranger-panel" id="ranger-water">
+      <div class="research-grid">
+        <a class="research-link" href="https://www.bushmans.com.au/underbody-water-tanks" target="_blank"><span class="r-icon">&#128167;</span> Bushmans &ndash; Underbody Water Tanks <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.nationalpoly.com.au/water-cartage-tanks" target="_blank"><span class="r-icon">&#128167;</span> National Poly &ndash; Water Cartage Tanks <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.rosmech.com.au/" target="_blank"><span class="r-icon">&#128167;</span> Rosmech &ndash; Ute Water Tank Systems <span class="r-arrow">&rsaquo;</span></a>
+      </div>
+    </div>
+    <div class="ranger-panel" id="ranger-touring">
+      <div class="research-grid">
+        <a class="research-link" href="https://www.msa4x4.com.au/ford-ranger" target="_blank"><span class="r-icon">&#128188;</span> MSA 4x4 &ndash; Drawers, Fridge Slides <span class="r-arrow">&rsaquo;</span></a>
+        <a class="research-link" href="https://www.clearviewaccessories.com.au/products/ford-ranger" target="_blank"><span class="r-icon">&#128065;</span> Clearview &ndash; Towing Mirrors, Accessories <span class="r-arrow">&rsaquo;</span></a>
+      </div>
+    </div>
+  </div>
+
   <!-- ASX Market -->
   <div class="card span-3">
     <div class="card-header"><span class="icon">&#128200;</span> ASX 200 Market</div>
@@ -806,167 +899,6 @@
         </a>
       </div>
     </div>
-  </div>
-
-  <!-- Ford Ranger Super Duty -->
-  <div class="card span-3">
-    <div class="card-header"><span class="icon">&#128663;</span> Ford Ranger Super Duty</div>
-
-    <div class="ranger-tabs">
-      <button class="ranger-tab active" onclick="switchRangerTab('news', this)">Latest News</button>
-      <button class="ranger-tab" onclick="switchRangerTab('bullbars', this)">Bull Bars</button>
-      <button class="ranger-tab" onclick="switchRangerTab('suspension', this)">Suspension</button>
-      <button class="ranger-tab" onclick="switchRangerTab('tanks', this)">Long Range Tanks</button>
-      <button class="ranger-tab" onclick="switchRangerTab('canopies', this)">Canopies &amp; Trays</button>
-      <button class="ranger-tab" onclick="switchRangerTab('performance', this)">Performance</button>
-      <button class="ranger-tab" onclick="switchRangerTab('electrical', this)">Electrical</button>
-      <button class="ranger-tab" onclick="switchRangerTab('campers', this)">Campers</button>
-      <button class="ranger-tab" onclick="switchRangerTab('fridges', this)">Fridges</button>
-      <button class="ranger-tab" onclick="switchRangerTab('water', this)">Water Tanks</button>
-      <button class="ranger-tab" onclick="switchRangerTab('touring', this)">Touring</button>
-    </div>
-
-    <!-- Tab: Latest News (articles + YouTube, last 2 weeks only) -->
-    <div class="ranger-panel active" id="ranger-news">
-      <div class="ranger-feed" id="ranger-news-feed"><div class="loading">Loading latest news</div></div>
-    </div>
-
-    <div class="ranger-panel" id="ranger-bullbars">
-        <div class="research-grid">
-          <a class="research-link" href="https://www.arb.com.au/ford-ranger/" target="_blank">
-            <span class="r-icon">&#128296;</span> ARB &ndash; Bull Bars, Canopies, Drawers <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.tjm.com.au/vehicles/ford-ranger" target="_blank">
-            <span class="r-icon">&#128736;</span> TJM &ndash; Bull Bars, Side Steps, Snorkels <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.opposite-lock.com.au/vehicles/ford-ranger" target="_blank">
-            <span class="r-icon">&#128274;</span> Opposite Lock &ndash; Bars, Rails, Recovery <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.mcc4x4.com.au/vehicles/ford-ranger" target="_blank">
-            <span class="r-icon">&#128737;</span> MCC 4x4 &ndash; Bars, Racks, Steps <span class="r-arrow">&rsaquo;</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="ranger-panel" id="ranger-suspension">
-        <div class="research-grid">
-          <a class="research-link" href="https://www.ironman4x4.com.au/ford-ranger" target="_blank">
-            <span class="r-icon">&#128170;</span> Ironman 4x4 &ndash; Suspension, Lift Kits <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.tough-dog.com/vehicle/ford-ranger" target="_blank">
-            <span class="r-icon">&#128054;</span> Tough Dog &ndash; Suspension Systems <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.oldmanemu.com.au/vehicles/ford" target="_blank">
-            <span class="r-icon">&#9881;</span> Old Man Emu &ndash; Suspension <span class="r-arrow">&rsaquo;</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="ranger-panel" id="ranger-tanks">
-        <div class="research-grid">
-          <a class="research-link" href="https://www.browndavis.com.au/long-range-fuel-tanks/ford/ranger" target="_blank">
-            <span class="r-icon">&#9981;</span> Brown Davis &ndash; Long Range Tanks <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.longrangeautomotive.com/ford-ranger" target="_blank">
-            <span class="r-icon">&#128663;</span> Long Range Automotive &ndash; Fuel Tanks <span class="r-arrow">&rsaquo;</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="ranger-panel" id="ranger-canopies">
-        <div class="research-grid">
-          <a class="research-link" href="https://www.arb.com.au/accessories/canopies/" target="_blank">
-            <span class="r-icon">&#127968;</span> ARB &ndash; Ascent Canopies <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.flexiglass.com.au/ford-ranger" target="_blank">
-            <span class="r-icon">&#128230;</span> FlexiGlass &ndash; Canopies, Lids <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.norweld.com.au/ford-ranger-aluminium-trays/" target="_blank">
-            <span class="r-icon">&#128296;</span> Norweld &ndash; Aluminium Trays <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.jacksmetalwork.com.au/" target="_blank">
-            <span class="r-icon">&#128736;</span> Jacks Metal Work &ndash; Custom Trays <span class="r-arrow">&rsaquo;</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="ranger-panel" id="ranger-performance">
-        <div class="research-grid">
-          <a class="research-link" href="https://www.efi-parts.com.au/collections/ford-ranger" target="_blank">
-            <span class="r-icon">&#9889;</span> EFI Parts &ndash; Performance Parts <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.unichip.com.au/vehicles/ford-ranger" target="_blank">
-            <span class="r-icon">&#128200;</span> Unichip &ndash; ECU Tuning <span class="r-arrow">&rsaquo;</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="ranger-panel" id="ranger-electrical">
-        <div class="research-grid">
-          <a class="research-link" href="https://www.stedilight.com/vehicles/ford-ranger" target="_blank">
-            <span class="r-icon">&#128161;</span> STEDI &ndash; LED Light Bars, Spotlights <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.redarc.com.au/ford-ranger" target="_blank">
-            <span class="r-icon">&#128267;</span> REDARC &ndash; Dual Battery, Solar, DCDC <span class="r-arrow">&rsaquo;</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="ranger-panel" id="ranger-campers">
-        <div class="research-grid">
-          <a class="research-link" href="https://www.jacksoncarryme.com.au/" target="_blank">
-            <span class="r-icon">&#9978;</span> Jackson Carry Me &ndash; Slide-On Campers <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.tommycampers.com.au/sdx" target="_blank">
-            <span class="r-icon">&#127957;</span> Tommy Campers &ndash; SDX Slide-On <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.duvalay.com.au/" target="_blank">
-            <span class="r-icon">&#128716;</span> Duvalay &ndash; Camper Mattresses <span class="r-arrow">&rsaquo;</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="ranger-panel" id="ranger-fridges">
-        <div class="research-grid">
-          <a class="research-link" href="https://www.dometic.com/en-au/outdoor/portable-fridges-and-coolers/" target="_blank">
-            <span class="r-icon">&#10052;</span> Dometic &ndash; Portable Fridges <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.engelaustralia.com.au/fridge-freezers" target="_blank">
-            <span class="r-icon">&#10052;</span> Engel &ndash; Fridge Freezers <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.evachill.com.au/" target="_blank">
-            <span class="r-icon">&#10052;</span> EvaKool &ndash; Fridges &amp; Freezers <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.bushmanfridges.com.au/" target="_blank">
-            <span class="r-icon">&#10052;</span> Bushman &ndash; 12V Fridges <span class="r-arrow">&rsaquo;</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="ranger-panel" id="ranger-water">
-        <div class="research-grid">
-          <a class="research-link" href="https://www.bushmans.com.au/underbody-water-tanks" target="_blank">
-            <span class="r-icon">&#128167;</span> Bushmans &ndash; Underbody Water Tanks <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.nationalpoly.com.au/water-cartage-tanks" target="_blank">
-            <span class="r-icon">&#128167;</span> National Poly &ndash; Water Cartage Tanks <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.rosmech.com.au/" target="_blank">
-            <span class="r-icon">&#128167;</span> Rosmech &ndash; Ute Water Tank Systems <span class="r-arrow">&rsaquo;</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="ranger-panel" id="ranger-touring">
-        <div class="research-grid">
-          <a class="research-link" href="https://www.msa4x4.com.au/ford-ranger" target="_blank">
-            <span class="r-icon">&#128188;</span> MSA 4x4 &ndash; Drawers, Fridge Slides <span class="r-arrow">&rsaquo;</span>
-          </a>
-          <a class="research-link" href="https://www.clearviewaccessories.com.au/products/ford-ranger" target="_blank">
-            <span class="r-icon">&#128065;</span> Clearview &ndash; Towing Mirrors, Accessories <span class="r-arrow">&rsaquo;</span>
-          </a>
-        </div>
-      </div>
   </div>
 
   <!-- Travel Deals -->
