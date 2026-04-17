@@ -500,46 +500,6 @@
     color: var(--text-muted);
     margin-bottom: 16px;
   }
-  .fx-trend {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .fx-trend-item {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
-  }
-  .fx-trend-item .label {
-    font-size: 11px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .fx-trend-item .value {
-    font-size: 16px;
-    font-weight: 700;
-    margin-top: 2px;
-  }
-  .fx-trend-item .change {
-    font-size: 11px;
-    font-weight: 600;
-    margin-top: 2px;
-  }
-  .fx-up { color: var(--green); }
-  .fx-down { color: var(--red); }
-  .fx-signal {
-    padding: 12px 14px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.5;
-  }
-  .fx-signal.good { background: rgba(52,211,153,0.12); color: var(--green); }
-  .fx-signal.ok { background: rgba(56,189,248,0.12); color: var(--accent); }
-  .fx-signal.bad { background: rgba(248,113,113,0.12); color: var(--red); }
   .fx-converter {
     background: rgba(255,255,255,0.05);
     border-radius: 10px;
@@ -1399,109 +1359,90 @@
   }
 
   // ── AUD/VND Currency ──
-  const FX_STORAGE_KEY = 'audvnd_history';
-
-  function getFxHistory() {
-    try { return JSON.parse(localStorage.getItem(FX_STORAGE_KEY)) || []; }
-    catch { return []; }
-  }
-
-  function saveFxRate(rate) {
-    const history = getFxHistory();
-    const today = new Date().toISOString().slice(0, 10);
-    // Only store one entry per day
-    if (history.length > 0 && history[history.length - 1].date === today) {
-      history[history.length - 1].rate = rate;
-    } else {
-      history.push({ date: today, rate: rate });
-    }
-    // Keep last 90 days
-    while (history.length > 90) history.shift();
-    localStorage.setItem(FX_STORAGE_KEY, JSON.stringify(history));
-  }
-
   function formatVND(num) {
     return num.toLocaleString('en-AU', { maximumFractionDigits: 0 });
   }
 
+  function fxDateStr(d) {
+    return d.toISOString().slice(0, 10);
+  }
+
   async function loadFxRate() {
     try {
+      const container = document.getElementById('fx-content');
+
+      // Get current rate
       const res = await fetch('https://open.er-api.com/v6/latest/AUD');
       const data = await res.json();
       if (data.result !== 'success') throw new Error('API error');
-
       const rate = data.rates.VND;
-      saveFxRate(rate);
-      const history = getFxHistory();
 
-      // Calculate trends from stored history
-      const today = rate;
-      const h7 = history.length >= 7 ? history[history.length - 7].rate : null;
-      const h30 = history.length >= 30 ? history[history.length - 30].rate : null;
-      const change7 = h7 ? ((today - h7) / h7 * 100) : null;
-      const change30 = h30 ? ((today - h30) / h30 * 100) : null;
-
-      // 30-day high/low
-      const recent = history.slice(-30);
-      const rates = recent.map(r => r.rate);
-      const high30 = Math.max(...rates);
-      const low30 = Math.min(...rates);
-      const avg30 = rates.reduce((a, b) => a + b, 0) / rates.length;
-
-      // Signal: is now a good time?
-      let signal, signalClass, signalText;
-      if (rate >= avg30 * 1.01) {
-        signalClass = 'good';
-        signalText = 'Rate is above average — good time to exchange';
-      } else if (rate <= avg30 * 0.99) {
-        signalClass = 'bad';
-        signalText = 'Rate is below average — consider waiting if you can';
-      } else {
-        signalClass = 'ok';
-        signalText = 'Rate is around average — reasonable time to exchange';
+      // Fetch 12 months of historical rates (weekly samples)
+      const now = new Date();
+      const dates = [];
+      for (let i = 12; i >= 1; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        dates.push(fxDateStr(d));
       }
 
-      // Build SVG line chart from history
+      const histResults = await Promise.allSettled(
+        dates.map(d =>
+          fetch(`https://${d}.currency-api.pages.dev/v1/currencies/aud.json`)
+            .then(r => r.json())
+            .then(j => ({ date: d, rate: j.aud.vnd }))
+        )
+      );
+
+      // Collect successful results + today
+      const chartData = [];
+      histResults.forEach(r => {
+        if (r.status === 'fulfilled' && r.value.rate) {
+          chartData.push(r.value);
+        }
+      });
+      chartData.push({ date: fxDateStr(now), rate: rate });
+
+      // Build SVG chart
       let chartHTML = '';
-      if (recent.length > 1) {
-        const chartMin = Math.min(...rates) * 0.9995;
-        const chartMax = Math.max(...rates) * 1.0005;
+      if (chartData.length > 2) {
+        const rates = chartData.map(r => r.rate);
+        const chartMin = Math.min(...rates) * 0.998;
+        const chartMax = Math.max(...rates) * 1.002;
         const range = chartMax - chartMin || 1;
-        const w = 400, h = 120, pad = 30, padR = 10, padB = 18, padT = 8;
+        const w = 400, h = 160, pad = 45, padR = 10, padB = 20, padT = 10;
         const plotW = w - pad - padR;
         const plotH = h - padT - padB;
-        const step = plotW / Math.max(recent.length - 1, 1);
+        const step = plotW / Math.max(chartData.length - 1, 1);
 
-        // Build line points
-        const points = recent.map((r, i) => {
-          const x = pad + i * step;
-          const y = padT + plotH - ((r.rate - chartMin) / range) * plotH;
-          return { x, y, rate: r.rate, date: r.date };
-        });
+        const points = chartData.map((r, i) => ({
+          x: pad + i * step,
+          y: padT + plotH - ((r.rate - chartMin) / range) * plotH,
+          rate: r.rate,
+          date: r.date
+        }));
+
         const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
         const areaPath = linePath + ` L${points[points.length-1].x.toFixed(1)},${padT + plotH} L${points[0].x.toFixed(1)},${padT + plotH} Z`;
 
-        // Y-axis labels (3 ticks)
-        const yMid = (chartMin + chartMax) / 2;
         const yLabels = [
           { val: chartMax, y: padT },
-          { val: yMid, y: padT + plotH / 2 },
+          { val: (chartMin + chartMax) / 2, y: padT + plotH / 2 },
           { val: chartMin, y: padT + plotH }
         ];
 
-        // X-axis labels (first, mid, last)
-        const xLabels = [
-          { label: recent[0].date.slice(5), x: points[0].x },
-          { label: recent[Math.floor(recent.length/2)].date.slice(5), x: points[Math.floor(recent.length/2)].x },
-          { label: recent[recent.length-1].date.slice(5), x: points[recent.length-1].x }
-        ];
+        // X-axis: show every 3rd month label
+        const xLabels = chartData
+          .map((r, i) => ({ label: new Date(r.date).toLocaleDateString('en-AU', { month: 'short', year: '2-digit' }), x: points[i].x, i }))
+          .filter((_, i) => i % 3 === 0 || i === chartData.length - 1);
 
         const lastPt = points[points.length - 1];
+        const high = Math.max(...rates);
+        const low = Math.min(...rates);
 
         chartHTML = `
-          <div class="fx-chart-container">
-            <div class="fx-chart-title">Rate history (${recent.length} days)</div>
-            <svg class="fx-chart-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+          <div class="fx-chart-container" style="margin-top:10px;">
+            <div class="fx-chart-title">12 Month AUD/VND &bull; High: ${formatVND(high)} &bull; Low: ${formatVND(low)}</div>
+            <svg class="fx-chart-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" style="height:160px;">
               <defs>
                 <linearGradient id="fxGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3"/>
@@ -1510,10 +1451,10 @@
               </defs>
               ${yLabels.map(yl => `
                 <line x1="${pad}" y1="${yl.y}" x2="${w - padR}" y2="${yl.y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-                <text x="${pad - 4}" y="${yl.y + 3}" text-anchor="end" fill="#64748b" font-size="9" font-family="sans-serif">${formatVND(yl.val)}</text>
+                <text x="${pad - 4}" y="${yl.y + 3}" text-anchor="end" fill="#64748b" font-size="8" font-family="sans-serif">${formatVND(yl.val)}</text>
               `).join('')}
               ${xLabels.map(xl => `
-                <text x="${xl.x}" y="${h - 2}" text-anchor="middle" fill="#64748b" font-size="9" font-family="sans-serif">${xl.label}</text>
+                <text x="${xl.x}" y="${h - 3}" text-anchor="middle" fill="#64748b" font-size="8" font-family="sans-serif">${xl.label}</text>
               `).join('')}
               <path d="${areaPath}" fill="url(#fxGrad)"/>
               <path d="${linePath}" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1521,44 +1462,13 @@
             </svg>
           </div>
         `;
-      } else {
-        chartHTML = `<div class="fx-chart-container"><div class="fx-chart-title">Chart builds as you use the dashboard each day</div></div>`;
       }
 
-      function changeHTML(val) {
-        if (val === null) return '<span style="color:var(--text-muted);">—</span>';
-        const arrow = val >= 0 ? '&#9650;' : '&#9660;';
-        const cls = val >= 0 ? 'fx-up' : 'fx-down';
-        return `<span class="${cls}">${arrow} ${Math.abs(val).toFixed(2)}%</span>`;
-      }
-
-      document.getElementById('fx-content').innerHTML = `
+      container.innerHTML = `
         <div class="fx-layout">
           <div class="fx-main">
             <div class="fx-rate-big">&#8363; ${formatVND(rate)}</div>
             <div class="fx-rate-label">1 AUD = ${formatVND(rate)} VND &bull; Updated ${new Date(data.time_last_update_utc).toLocaleTimeString('en-AU', {hour:'2-digit', minute:'2-digit'})}</div>
-
-            <div class="fx-trend">
-              <div class="fx-trend-item">
-                <div class="label">7 Day</div>
-                <div class="change">${changeHTML(change7)}</div>
-              </div>
-              <div class="fx-trend-item">
-                <div class="label">30 Day</div>
-                <div class="change">${changeHTML(change30)}</div>
-              </div>
-              <div class="fx-trend-item">
-                <div class="label">30d High</div>
-                <div class="value" style="font-size:13px;">${formatVND(high30)}</div>
-              </div>
-              <div class="fx-trend-item">
-                <div class="label">30d Low</div>
-                <div class="value" style="font-size:13px;">${formatVND(low30)}</div>
-              </div>
-            </div>
-
-            <div class="fx-signal ${signalClass}">${signalText}</div>
-
             ${chartHTML}
           </div>
 
